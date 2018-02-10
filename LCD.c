@@ -5,6 +5,9 @@
  *      Author: joe
  */
 
+/* DriverLib Includes */
+#include "driverlib.h"
 
 #include "LCD.h"
+
 
