@@ -57,11 +57,27 @@
 /* Standard Includes */
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/*Personal Library Includes*/
+#include "clockConfig.h"
+#include "ST7735.h"
+#include "LCD.h"
+
+/*Text File Includes*/
+#include "dark.txt"
+#include "overcast.txt"
+#include "partlysunny.txt"
+#include "sunny.txt"
+#include "twilight.txt"
 
 int main(void)
 {
-    /* Stop Watchdog  */
+    /* Halting the Watchdog  */
     MAP_WDT_A_holdTimer();
+
+    clockStartUp();
 
     while(1)
     {
