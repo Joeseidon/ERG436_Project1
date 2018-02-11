@@ -34,7 +34,11 @@ typedef struct forecast{
     uint16_t width;
     uint16_t x;
     uint16_t y;
+    /*Values used to determine light range*/
+    int maxR;
+    int minR;
 }forecast;
+
 typedef struct display_cell{
     /*Box dimensions*/
     uint16_t x_start;
@@ -48,7 +52,7 @@ typedef struct display_cell{
     /*Display Data*/
     float temperature;
     float humidity;
-    float Pressure;
+    float pressure;
 }display_cell;
 
 //typedef struct menu_item menu_item;
@@ -82,5 +86,6 @@ void print_current_status_pic(Light_Status current_status);
 void create_data_display(void);
 void LCD_init(void);
 void updateForecast(Light_Status newForecast);
+void updateDataDisplay(void);
 
 #endif /* LCD_H_ */

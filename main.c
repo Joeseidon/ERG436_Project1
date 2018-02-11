@@ -65,6 +65,10 @@
 #include "ST7735.h"
 #include "LCD.h"
 
+Light_Status currentStatus = DARK;
+
+int current_count, target_count=8,light_status_updated=0;
+
 int main(void)
 {
     /* Halting the Watchdog  */
@@ -72,12 +76,40 @@ int main(void)
 
     clockStartUp();
 
+    /* Enabling the FPU for floating point operation */
+    MAP_FPU_enableModule();
+    MAP_FPU_enableLazyStacking();
+
+    /* Configuring SysTick */
+    MAP_SysTick_enableModule();
+    MAP_SysTick_setPeriod(12000000);
+    //MAP_Interrupt_enableSleepOnIsrExit();
+
+
     LCD_init();
 
     create_data_display();
+    print_current_status_pic(currentStatus);
+
+    updateDataDisplay();
+
+    MAP_SysTick_enableInterrupt();
+    MAP_Interrupt_enableMaster();
 
     while(1)
     {
-        
+       if(light_status_updated){
+           print_current_status_pic(currentStatus);
+           light_status_updated=0;
+       }
+    }
+}
+void SysTick_Handler(void)
+{
+    current_count++;
+    if(current_count==target_count){
+        currentStatus++;
+        light_status_updated = 1;
+        current_count=0;
     }
 }
