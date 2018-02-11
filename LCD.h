@@ -27,6 +27,25 @@ typedef enum
 
 }Light_Status;
 
+typedef struct display_cell{
+
+    /*Box dimensions*/
+    int x_pos;
+    int y_pos;
+
+    /*Flagged when cursor is over this item*/
+    int selected;
+
+    /*Flagged when the user clicks this item*/
+    int clicked;
+
+    /*Counter value required to reach desired frequency*/
+    int toggle_period;
+
+    /*Clk Count: used for longer delays*/
+    int toggle_count;
+}display_cell;
+
 //typedef struct menu_item menu_item;
 typedef struct menu_item{
     /*Menu Item Number*/

@@ -23,6 +23,7 @@ uint16_t grid_color = ST7735_CYAN;
 uint16_t menu_text_color = ST7735_YELLOW;
 uint16_t highlight_text_color = ST7735_CYAN;
 
+uint8_t LCD_Rotation = 1;
 
 
 //create array for menu item names
@@ -71,7 +72,7 @@ menu_items num_to_menu_item(int x){
 
 void LCD_init(void){
     ST7735_InitR(INITR_REDTAB); // initialize LCD controller IC
-    ST7735_SetRotation(1);
+    ST7735_SetRotation(LCD_Rotation);
 }
 Light_Status num_to_enum(int x){
     Light_Status current_status;
