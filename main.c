@@ -65,13 +65,6 @@
 #include "ST7735.h"
 #include "LCD.h"
 
-/*Text File Includes*/
-#include "dark.txt"
-#include "overcast.txt"
-#include "partlysunny.txt"
-#include "sunny.txt"
-#include "twilight.txt"
-
 int main(void)
 {
     /* Halting the Watchdog  */
