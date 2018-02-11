@@ -5,6 +5,9 @@
 SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
+EXE_SRCS += \
+../BmpConvert16.exe 
+
 CMD_SRCS += \
 ../driverlib_empty_project_ccs.cmd 
 
@@ -60,6 +63,9 @@ C_DEPS__QUOTED += \
 "startup_msp432p401r_ccs.d" \
 "system_msp432p401r.d" \
 "timerAInterface.d" 
+
+EXE_SRCS__QUOTED += \
+"../BmpConvert16.exe" 
 
 C_SRCS__QUOTED += \
 "../LCD.c" \

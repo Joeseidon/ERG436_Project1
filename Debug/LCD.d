@@ -46,7 +46,7 @@ LCD.obj: ../ST7735.h
 LCD.obj: ../delays.h
 LCD.obj: ../dark.txt
 LCD.obj: ../overcast.txt
-LCD.obj: ../partlysunny.txt
+LCD.obj: ../partlySunny.txt
 LCD.obj: ../sunny.txt
 LCD.obj: ../twilight.txt
 
@@ -96,6 +96,6 @@ C:/ti/msp/MSP432Ware_3_50_00_02/driverlib/driverlib/MSP432P4xx/wdt_a.h:
 ../delays.h: 
 ../dark.txt: 
 ../overcast.txt: 
-../partlysunny.txt: 
+../partlySunny.txt: 
 ../sunny.txt: 
 ../twilight.txt: 

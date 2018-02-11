@@ -15,7 +15,7 @@
 /*Text File Includes*/
 #include "dark.txt"
 #include "overcast.txt"
-#include "partlysunny.txt"
+#include "partlySunny.txt"
 #include "sunny.txt"
 #include "twilight.txt"
 
@@ -34,7 +34,6 @@ char *menu_names[5] = {
                      {"5.0Hz"},
                      {"LED 0/1"}
 };
-
 
 
 
@@ -120,7 +119,7 @@ void print_current_status_pic(Light_Status current_status){
         break;
 
     case PARTLY_SUNNY:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, partlysunny, picture_width, picture_hight);
+        ST7735_DrawBitmap(horizontal_start, vertical_start, partlySunny, picture_width, picture_hight);
         TenMsDelay(10);
         ST7735_DrawString(0,0,"Status: Partly-Sunny", menu_text_color);
         break;
@@ -139,8 +138,12 @@ void print_current_status_pic(Light_Status current_status){
     }
 }
 
+void updateForecast(Light_Status newForecast){
+    return;
+}
+
 void create_data_display(void){
-    ST7735_DrawString(15,3,"Menu:",menu_text_color);
+    /*ST7735_DrawString(15,3,"Menu:",menu_text_color);
     ST7735_DrawFastHLine(80,38,50,grid_color);
     ST7735_DrawFastHLine(0,10,128,grid_color);
     TenMsDelay(1);
@@ -160,6 +163,49 @@ void create_data_display(void){
     ST7735_DrawString(11,13,"TP:",menu_text_color);
     ST7735_DrawString(11,14,"RH:",menu_text_color);
     ST7735_DrawString(11,15,"BP:",menu_text_color);
+    */
+    display_cell inside={
+                    0,      //x_start
+                    0,      //x_finish
+                    0,      //y_start
+                    0,      //y_finish
+                    " ",    //display title
+                    0.0,    //temp
+                    0.0,    //humidity
+                    0.0     //Pressure
+    };
+
+    display_cell outside={
+                    0,      //x_start
+                    0,      //x_finish
+                    0,      //y_start
+                    0,      //y_finish
+                    " ",    //display title
+                    0.0,    //temp
+                    0.0,    //humidity
+                    0.0     //Pressure
+    };
+
+    //Draw inside display
+    ST7735_DrawString2(110,50,"Out",menu_text_color,ST7735_BLACK);
+    ST7735_DrawFastHLine(100,65,50,grid_color);
+    ST7735_DrawString2(95,70,"T:",menu_text_color,ST7735_BLACK);
+    ST7735_DrawString2(95,90,"H:",menu_text_color,ST7735_BLACK);
+
+    //Draw outside display
+    ST7735_DrawString2(10,50,"In",menu_text_color,ST7735_BLACK);
+    ST7735_DrawFastHLine(0,65,50,grid_color);
+    ST7735_DrawString2(5,70,"T:",menu_text_color,ST7735_BLACK);
+    ST7735_DrawString2(5,90,"H:",menu_text_color,ST7735_BLACK);
+
+
+    ST7735_DrawString2(35,110,"Bp:",menu_text_color,ST7735_BLACK);
+    ST7735_DrawFastHLine(0,105,160,grid_color);
+
+    //draw forecast display
+    ST7735_DrawBitmap(50, 50, overcast, 55, 36);
+    TenMsDelay(10);
+
 }
 
 

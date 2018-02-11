@@ -27,23 +27,28 @@ typedef enum
 
 }Light_Status;
 
+typedef struct forecast{
+    Light_Status light_quality;
+    const uint16_t *image;
+    uint16_t height;
+    uint16_t width;
+    uint16_t x;
+    uint16_t y;
+}forecast;
 typedef struct display_cell{
-
     /*Box dimensions*/
-    int x_pos;
-    int y_pos;
+    uint16_t x_start;
+    uint16_t x_finish;
+    uint16_t y_start;
+    uint16_t y_finish;
 
-    /*Flagged when cursor is over this item*/
-    int selected;
+    /*Display Title*/
+    char *display_title;
 
-    /*Flagged when the user clicks this item*/
-    int clicked;
-
-    /*Counter value required to reach desired frequency*/
-    int toggle_period;
-
-    /*Clk Count: used for longer delays*/
-    int toggle_count;
+    /*Display Data*/
+    float temperature;
+    float humidity;
+    float Pressure;
 }display_cell;
 
 //typedef struct menu_item menu_item;
@@ -76,5 +81,6 @@ Light_Status num_to_enum(int x);
 void print_current_status_pic(Light_Status current_status);
 void create_data_display(void);
 void LCD_init(void);
+void updateForecast(Light_Status newForecast);
 
 #endif /* LCD_H_ */
