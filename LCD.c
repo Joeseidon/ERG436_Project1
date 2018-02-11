@@ -69,6 +69,10 @@ menu_items num_to_menu_item(int x){
     return main_menu;
 }
 
+void LCD_init(void){
+    ST7735_InitR(INITR_REDTAB); // initialize LCD controller IC
+    ST7735_SetRotation(1);
+}
 Light_Status num_to_enum(int x){
     Light_Status current_status;
     switch(x){

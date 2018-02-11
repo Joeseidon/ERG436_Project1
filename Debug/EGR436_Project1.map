@@ -1,33 +1,34 @@
 ******************************************************************************
                   TI ARM Linker PC v16.9.6                     
 ******************************************************************************
->> Linked Sat Feb 10 19:18:00 2018
+>> Linked Sat Feb 10 22:19:28 2018
 
 OUTPUT FILE NAME:   <EGR436_Project1.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000009d1
+ENTRY POINT SYMBOL: "_c_int00"  address: 0000f131
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  MAIN                  00000000   00040000  00000cf6  0003f30a  R  X
+  MAIN                  00000000   00040000  0000f488  00030b78  R  X
   INFO                  00200000   00004000  00000000  00004000  R  X
   SRAM_CODE             01000000   00010000  00000000  00010000  RW X
-  SRAM_DATA             20000000   00010000  0000022c  0000fdd4  RW  
+  SRAM_DATA             20000000   00010000  0000026c  0000fd94  RW  
 
 
 SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00000cf8   00000cf8    r-x
+00000000    00000000    0000f490   0000f490    r-x
   00000000    00000000    00000140   00000140    r-- .intvecs
-  00000140    00000140    00000b76   00000b76    r-x .text
-  00000cb8    00000cb8    00000040   00000040    r-- .cinit
-20000000    20000000    0000002c   00000000    rw-
-  20000000    20000000    0000001c   00000000    rw- .data
-  2000001c    2000001c    00000010   00000000    rw- .bss
+  00000140    00000140    0000cfe2   0000cfe2    r-- .const
+  0000d124    0000d124    00002316   00002316    r-x .text
+  0000f440    0000f440    00000050   00000050    r-- .cinit
+20000000    20000000    0000006c   00000000    rw-
+  20000000    20000000    00000038   00000000    rw- .data
+  20000038    20000038    00000034   00000000    rw- .bss
 2000fe00    2000fe00    00000200   00000000    rw-
   2000fe00    2000fe00    00000200   00000000    rw- .stack
 
@@ -40,64 +41,90 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    00000140     
                   00000000    00000140     startup_msp432p401r_ccs.obj (.intvecs:retain)
 
-.text      0    00000140    00000b76     
-                  00000140    00000328     system_msp432p401r.obj (.text)
-                  00000468    00000104     msp432p4xx_driverlib.lib : cs.o (.text:CS_getDCOFrequency)
-                  0000056c    000000cc     clockConfig.obj (.text)
-                  00000638    0000009c     msp432p4xx_driverlib.lib : cs.o (.text:CS_startHFXTWithTimeout)
-                  000006d4    0000009c                              : cs.o (.text:_CSComputeCLKFrequency)
-                  00000770    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
-                  0000080c    0000007a                                   : memset_t2.obj (.text)
-                  00000886    00000002                                   : mpu_init.obj (.text)
-                  00000888    00000070     msp432p4xx_driverlib.lib : cs.o (.text:_CSGetHFXTFrequency)
-                  000008f8    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.obj (.text)
-                  00000968    00000068                                   : copy_decompress_lzss.obj (.text:decompress:lzss)
-                  000009d0    00000054                                   : boot.obj (.text)
-                  00000a24    00000054                                   : exit.obj (.text)
-                  00000a78    00000050     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_getTLVInfo)
-                  00000ac8    0000004c                              : cs.o (.text:_CSGetDOCFrequency)
-                  00000b14    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : cpy_tbl.obj (.text)
-                  00000b60    00000048     msp432p4xx_driverlib.lib : cs.o (.text:_CSGetDividerValue)
-                  00000ba8    00000024                              : cs.o (.text:CS_clearInterruptFlag)
-                  00000bcc    00000018                              : cs.o (.text:CS_getMCLK)
-                  00000be4    00000018                              : cs.o (.text:CS_getSMCLK)
-                  00000bfc    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
-                  00000c14    00000014     msp432p4xx_driverlib.lib : cs.o (.text:CS_setExternalClockSourceFrequency)
-                  00000c28    00000014     main.obj (.text)
-                  00000c3c    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.obj (.text)
-                  00000c50    00000012     startup_msp432p401r_ccs.obj (.text)
-                  00000c62    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : startup.obj (.text)
-                  00000c64    00000010     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_disableNMISource)
-                  00000c74    00000010                              : sysctl.o (.text:SysCtl_enableNMISource)
-                  00000c84    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
-                  00000c92    00000002     --HOLE-- [fill = 0]
-                  00000c94    0000000c     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_getNMISourceStatus)
-                  00000ca0    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.obj (.text:decompress:ZI)
-                  00000cac    00000006     msp432p4xx_driverlib.lib : cs.o (.text:CS_startHFXT)
-                  00000cb2    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.obj (.text)
+.const     0    00000140    0000cfe2     
+                  00000140    00002800     LCD.obj (.const:dark)
+                  00002940    00002800     LCD.obj (.const:overcast)
+                  00005140    00002800     LCD.obj (.const:partlysunny)
+                  00007940    00002800     LCD.obj (.const:sunny)
+                  0000a140    00002800     LCD.obj (.const:twilight)
+                  0000c940    000004fb     ST7735.obj (.const:.string:Font)
+                  0000ce3b    00000200     ST7735.obj (.const:.string:dBfs)
+                  0000d03b    00000067     ST7735.obj (.const:.string:Bcmd)
+                  0000d0a2    0000003b     ST7735.obj (.const:.string:Rcmd1)
+                  0000d0dd    0000002b     ST7735.obj (.const:.string:Rcmd3)
+                  0000d108    0000000d     ST7735.obj (.const:.string:Rcmd2green)
+                  0000d115    0000000d     ST7735.obj (.const:.string:Rcmd2red)
 
-.cinit     0    00000cb8    00000040     
-                  00000cb8    00000015     (.cinit..data.load) [load image, compression = lzss]
-                  00000ccd    00000003     --HOLE-- [fill = 0]
-                  00000cd0    0000000c     (__TI_handler_table)
-                  00000cdc    00000004     --HOLE-- [fill = 0]
-                  00000ce0    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  00000ce8    00000010     (__TI_cinit_table)
+.text      0    0000d124    00002316     
+                  0000d124    00001420     ST7735.obj (.text)
+                  0000e544    0000035c     LCD.obj (.text)
+                  0000e8a0    00000328     system_msp432p401r.obj (.text)
+                  0000ebc8    00000104     msp432p4xx_driverlib.lib : cs.o (.text:CS_getDCOFrequency)
+                  0000eccc    000000cc     clockConfig.obj (.text)
+                  0000ed98    0000009c     msp432p4xx_driverlib.lib : cs.o (.text:CS_startHFXTWithTimeout)
+                  0000ee34    0000009c                              : cs.o (.text:_CSComputeCLKFrequency)
+                  0000eed0    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
+                  0000ef6c    0000007a                                   : memset_t2.obj (.text)
+                  0000efe6    00000002                                   : mpu_init.obj (.text)
+                  0000efe8    00000070     msp432p4xx_driverlib.lib : cs.o (.text:_CSGetHFXTFrequency)
+                  0000f058    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.obj (.text)
+                  0000f0c8    00000068                                   : copy_decompress_lzss.obj (.text:decompress:lzss)
+                  0000f130    00000054                                   : boot.obj (.text)
+                  0000f184    00000054                                   : exit.obj (.text)
+                  0000f1d8    00000050     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_getTLVInfo)
+                  0000f228    0000004c                              : cs.o (.text:_CSGetDOCFrequency)
+                  0000f274    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : cpy_tbl.obj (.text)
+                  0000f2c0    00000048     msp432p4xx_driverlib.lib : cs.o (.text:_CSGetDividerValue)
+                  0000f308    00000024                              : cs.o (.text:CS_clearInterruptFlag)
+                  0000f32c    0000001c     delays.obj (.text)
+                  0000f348    0000001c     main.obj (.text)
+                  0000f364    00000018     msp432p4xx_driverlib.lib : cs.o (.text:CS_getMCLK)
+                  0000f37c    00000018                              : cs.o (.text:CS_getSMCLK)
+                  0000f394    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
+                  0000f3ac    00000014     msp432p4xx_driverlib.lib : cs.o (.text:CS_setExternalClockSourceFrequency)
+                  0000f3c0    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.obj (.text)
+                  0000f3d4    00000012     startup_msp432p401r_ccs.obj (.text)
+                  0000f3e6    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : startup.obj (.text)
+                  0000f3e8    00000010     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_disableNMISource)
+                  0000f3f8    00000010                              : sysctl.o (.text:SysCtl_enableNMISource)
+                  0000f408    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  0000f416    00000002     --HOLE-- [fill = 0]
+                  0000f418    0000000c     msp432p4xx_driverlib.lib : sysctl.o (.text:SysCtl_getNMISourceStatus)
+                  0000f424    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.obj (.text:decompress:ZI)
+                  0000f430    00000006     msp432p4xx_driverlib.lib : cs.o (.text:CS_startHFXT)
+                  0000f436    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.obj (.text)
+
+.cinit     0    0000f440    00000050     
+                  0000f440    00000029     (.cinit..data.load) [load image, compression = lzss]
+                  0000f469    00000003     --HOLE-- [fill = 0]
+                  0000f46c    0000000c     (__TI_handler_table)
+                  0000f478    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  0000f480    00000010     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
 
-.data      0    20000000    0000001c     UNINITIALIZED
-                  20000000    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : exit.obj (.data:$O1$$)
-                  2000000c    00000008                                   : _lock.obj (.data:$O1$$)
-                  20000014    00000004                                   : stkdepth_vars.obj (.data)
-                  20000018    00000004     system_msp432p401r.obj (.data)
+.data      0    20000000    00000038     UNINITIALIZED
+                  20000000    00000014     ST7735.obj (.data)
+                  20000014    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : exit.obj (.data:$O1$$)
+                  20000020    00000008                                   : _lock.obj (.data:$O1$$)
+                  20000028    00000006     LCD.obj (.data)
+                  2000002e    00000002     --HOLE--
+                  20000030    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : stkdepth_vars.obj (.data)
+                  20000034    00000004     system_msp432p401r.obj (.data)
 
-.bss       0    2000001c    00000010     UNINITIALIZED
-                  2000001c    00000004     (.common:MCLKfreq)
-                  20000020    00000004     (.common:SMCLKfreq)
-                  20000024    00000004     (.common:hfxtFreq)
-                  20000028    00000004     (.common:lfxtFreq)
+.bss       0    20000038    00000034     UNINITIALIZED
+                  20000038    0000000c     (.common:Message)
+                  20000044    00000004     ST7735.obj (.bss)
+                  20000048    00000004     (.common:MCLKfreq)
+                  2000004c    00000004     (.common:Messageindex)
+                  20000050    00000004     (.common:SMCLKfreq)
+                  20000054    00000004     (.common:X)
+                  20000058    00000004     (.common:Ymax)
+                  2000005c    00000004     (.common:Ymin)
+                  20000060    00000004     (.common:Yrange)
+                  20000064    00000004     (.common:hfxtFreq)
+                  20000068    00000004     (.common:lfxtFreq)
 
 .stack     0    2000fe00    00000200     UNINITIALIZED
                   2000fe00    00000200     --HOLE--
@@ -107,12 +134,15 @@ MODULE SUMMARY
        Module                        code   ro data   rw data
        ------                        ----   -------   -------
     .\
+       LCD.obj                       860    51200     6      
+       ST7735.obj                    5152   2018      56     
        system_msp432p401r.obj        808    0         4      
        startup_msp432p401r_ccs.obj   18     320       0      
        clockConfig.obj               204    0         8      
-       main.obj                      20     0         0      
+       delays.obj                    28     0         0      
+       main.obj                      28     0         0      
     +--+-----------------------------+------+---------+---------+
-       Total:                        1050   320       12     
+       Total:                        7098   53538     74     
                                                              
     C:/ti/msp/MSP432Ware_3_50_00_02/driverlib/driverlib/MSP432P4xx/ccs/msp432p4xx_driverlib.lib
        cs.o                          942    0         8      
@@ -140,21 +170,21 @@ MODULE SUMMARY
        Total:                        816    0         24     
                                                              
        Stack:                        0      0         512    
-       Linker Generated:             0      57        0      
+       Linker Generated:             0      77        0      
     +--+-----------------------------+------+---------+---------+
-       Grand Total:                  2932   377       556    
+       Grand Total:                  8980   53615     618    
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00000ce8 records: 2, size/record: 8, table size: 16
-	.data: load addr=00000cb8, load size=00000015 bytes, run addr=20000000, run size=0000001c bytes, compression=lzss
-	.bss: load addr=00000ce0, load size=00000008 bytes, run addr=2000001c, run size=00000010 bytes, compression=zero_init
+__TI_cinit_table @ 0000f480 records: 2, size/record: 8, table size: 16
+	.data: load addr=0000f440, load size=00000029 bytes, run addr=20000000, run size=00000038 bytes, compression=lzss
+	.bss: load addr=0000f478, load size=00000008 bytes, run addr=20000038, run size=00000034 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00000cd0 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 0000f46c records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_decompress_lzss
 	index: 1, handler: __TI_decompress_none
 	index: 2, handler: __TI_zero_init
@@ -164,78 +194,144 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                              
 -------   ----                              
-00000a25  C$$EXIT                           
-00000ba9  CS_clearInterruptFlag             
-00000469  CS_getDCOFrequency                
-00000bcd  CS_getMCLK                        
-00000be5  CS_getSMCLK                       
-00000c15  CS_setExternalClockSourceFrequency
-00000cad  CS_startHFXT                      
-00000639  CS_startHFXTWithTimeout           
-2000001c  MCLKfreq                          
+0000f185  C$$EXIT                           
+0000f309  CS_clearInterruptFlag             
+0000ebc9  CS_getDCOFrequency                
+0000f365  CS_getMCLK                        
+0000f37d  CS_getSMCLK                       
+0000f3ad  CS_setExternalClockSourceFrequency
+0000f431  CS_startHFXT                      
+0000ed99  CS_startHFXTWithTimeout           
+0000d19b  Delay1ms                          
+0000e593  LCD_init                          
+20000048  MCLKfreq                          
+20000038  Message                           
+2000004c  Messageindex                      
+0000f32d  OneMsDelay                        
+0000e4e3  Output_Clear                      
+0000e4fd  Output_Color                      
+0000e4d3  Output_Init                       
+0000e4ed  Output_Off                        
+0000e4f5  Output_On                         
 UNDEFED   SHT$$INIT_ARRAY$$Base             
 UNDEFED   SHT$$INIT_ARRAY$$Limit            
-20000020  SMCLKfreq                         
-00000c65  SysCtl_disableNMISource           
-00000c75  SysCtl_enableNMISource            
-00000c95  SysCtl_getNMISourceStatus         
-00000a79  SysCtl_getTLVInfo                 
-20000018  SystemCoreClock                   
-00000141  SystemCoreClockUpdate             
-000003b5  SystemInit                        
+20000050  SMCLKfreq                         
+0000d77d  ST7735_Color565                   
+0000d7e1  ST7735_DrawBitmap                 
+0000db55  ST7735_DrawChar                   
+0000d9df  ST7735_DrawCharS                  
+0000d575  ST7735_DrawFastHLine              
+0000d4b7  ST7735_DrawFastVLine              
+0000d45d  ST7735_DrawPixel                  
+0000dcc7  ST7735_DrawString                 
+0000dd4d  ST7735_DrawString2                
+0000d671  ST7735_FillRect                   
+0000d62d  ST7735_FillScreen                 
+0000d329  ST7735_InitB                      
+0000d349  ST7735_InitR                      
+0000df7b  ST7735_InvertDisplay              
+0000e3b9  ST7735_OutChar                    
+0000e475  ST7735_OutString                  
+0000de3d  ST7735_OutUDec                    
+0000e2c5  ST7735_PlotBar                    
+0000df93  ST7735_PlotClear                  
+0000e0b5  ST7735_PlotLine                   
+0000e365  ST7735_PlotNext                   
+0000e37f  ST7735_PlotNextErase              
+0000dfef  ST7735_PlotPoint                  
+0000e1ef  ST7735_PlotPoints                 
+0000e31b  ST7735_PlotdBfs                   
+0000de0f  ST7735_SetCursor                  
+0000deb1  ST7735_SetRotation                
+0000e493  ST7735_SetTextColor               
+0000d7b1  ST7735_SwapColor                  
+20000008  StTextColor                       
+20000000  StX                               
+20000004  StY                               
+0000f3e9  SysCtl_disableNMISource           
+0000f3f9  SysCtl_enableNMISource            
+0000f419  SysCtl_getNMISourceStatus         
+0000f1d9  SysCtl_getTLVInfo                 
+20000034  SystemCoreClock                   
+0000e8a1  SystemCoreClockUpdate             
+0000eb15  SystemInit                        
+0000f337  TenMsDelay                        
 4000480c  WDTCTL_SYM                        
+20000054  X                                 
+20000058  Ymax                              
+2000005c  Ymin                              
+20000060  Yrange                            
 20010000  __STACK_END                       
 00000200  __STACK_SIZE                      
-00000ce8  __TI_CINIT_Base                   
-00000cf8  __TI_CINIT_Limit                  
-00000cd0  __TI_Handler_Table_Base           
-00000cdc  __TI_Handler_Table_Limit          
-000008f9  __TI_auto_init                    
-20000000  __TI_cleanup_ptr                  
-00000969  __TI_decompress_lzss              
-00000c85  __TI_decompress_none              
-20000004  __TI_dtors_ptr                    
-20000008  __TI_enable_exit_profile_output   
+0000f480  __TI_CINIT_Base                   
+0000f490  __TI_CINIT_Limit                  
+0000f46c  __TI_Handler_Table_Base           
+0000f478  __TI_Handler_Table_Limit          
+0000f059  __TI_auto_init                    
+20000014  __TI_cleanup_ptr                  
+0000f0c9  __TI_decompress_lzss              
+0000f409  __TI_decompress_none              
+20000018  __TI_dtors_ptr                    
+2000001c  __TI_enable_exit_profile_output   
 ffffffff  __TI_pprof_out_hndl               
 ffffffff  __TI_prof_data_size               
 ffffffff  __TI_prof_data_start              
 00000000  __TI_static_base__                
-00000ca1  __TI_zero_init                    
-0000080d  __aeabi_memclr                    
-0000080d  __aeabi_memclr4                   
-0000080d  __aeabi_memclr8                   
-00000771  __aeabi_memcpy                    
-00000771  __aeabi_memcpy4                   
-00000771  __aeabi_memcpy8                   
-0000080f  __aeabi_memset                    
-0000080f  __aeabi_memset4                   
-0000080f  __aeabi_memset8                   
+0000f425  __TI_zero_init                    
+0000ef6d  __aeabi_memclr                    
+0000ef6d  __aeabi_memclr4                   
+0000ef6d  __aeabi_memclr8                   
+0000eed1  __aeabi_memcpy                    
+0000eed1  __aeabi_memcpy4                   
+0000eed1  __aeabi_memcpy8                   
+0000ef6f  __aeabi_memset                    
+0000ef6f  __aeabi_memset4                   
+0000ef6f  __aeabi_memset8                   
 ffffffff  __binit__                         
 ffffffff  __c_args__                        
-00000887  __mpu_init                        
+0000efe7  __mpu_init                        
 2000fe00  __stack                           
-00000bfd  _args_main                        
-000009d1  _c_int00                          
-2000000c  _lock                             
-00000c4b  _nop                              
-00000c43  _register_lock                    
-00000c3d  _register_unlock                  
-00000c63  _system_post_cinit                
-00000cb3  _system_pre_init                  
-20000010  _unlock                           
-00000a29  abort                             
+0000f395  _args_main                        
+0000f131  _c_int00                          
+20000020  _lock                             
+0000f3cf  _nop                              
+0000f3c7  _register_lock                    
+0000f3c1  _register_unlock                  
+0000f3e7  _system_post_cinit                
+0000f437  _system_pre_init                  
+20000024  _unlock                           
+0000f189  abort                             
 ffffffff  binit                             
-000005b3  clockInit48MHzXTL                 
-00000579  clockStartUp                      
-00000b15  copy_in                           
-00000a31  exit                              
-0000056d  getMCLKfreq                       
-00000573  getSMCLKfreq                      
+0000ed13  clockInit48MHzXTL                 
+0000ecd9  clockStartUp                      
+0000f275  copy_in                           
+0000e723  create_data_display               
+0000ce3b  dBfs                              
+00000140  dark                              
+0000f191  exit                              
+0000e4c5  ferror                            
+0000e4b9  fgetc                             
+0000ddcd  fillmessage                       
+0000e4a7  fputc                             
+0000eccd  getMCLKfreq                       
+0000ecd3  getSMCLKfreq                      
+20000028  grid_color                        
+2000002c  highlight_text_color              
 00000000  interruptVectors                  
-00000c29  main                              
-20000014  main_func_sp                      
-00000771  memcpy                            
-00000815  memset                            
+20000010  lastj                             
+0000f349  main                              
+20000030  main_func_sp                      
+0000eed1  memcpy                            
+0000ef75  memset                            
+2000002a  menu_text_color                   
+0000e5a3  num_to_enum                       
+0000e545  num_to_menu_item                  
+00002940  overcast                          
+0000d18d  parrotdelay                       
+00005140  partlysunny                       
+0000e5f1  print_current_status_pic          
+00007940  sunny                             
+0000a140  twilight                          
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -244,65 +340,131 @@ address   name
 -------   ----                              
 00000000  __TI_static_base__                
 00000000  interruptVectors                  
-00000141  SystemCoreClockUpdate             
+00000140  dark                              
 00000200  __STACK_SIZE                      
-000003b5  SystemInit                        
-00000469  CS_getDCOFrequency                
-0000056d  getMCLKfreq                       
-00000573  getSMCLKfreq                      
-00000579  clockStartUp                      
-000005b3  clockInit48MHzXTL                 
-00000639  CS_startHFXTWithTimeout           
-00000771  __aeabi_memcpy                    
-00000771  __aeabi_memcpy4                   
-00000771  __aeabi_memcpy8                   
-00000771  memcpy                            
-0000080d  __aeabi_memclr                    
-0000080d  __aeabi_memclr4                   
-0000080d  __aeabi_memclr8                   
-0000080f  __aeabi_memset                    
-0000080f  __aeabi_memset4                   
-0000080f  __aeabi_memset8                   
-00000815  memset                            
-00000887  __mpu_init                        
-000008f9  __TI_auto_init                    
-00000969  __TI_decompress_lzss              
-000009d1  _c_int00                          
-00000a25  C$$EXIT                           
-00000a29  abort                             
-00000a31  exit                              
-00000a79  SysCtl_getTLVInfo                 
-00000b15  copy_in                           
-00000ba9  CS_clearInterruptFlag             
-00000bcd  CS_getMCLK                        
-00000be5  CS_getSMCLK                       
-00000bfd  _args_main                        
-00000c15  CS_setExternalClockSourceFrequency
-00000c29  main                              
-00000c3d  _register_unlock                  
-00000c43  _register_lock                    
-00000c4b  _nop                              
-00000c63  _system_post_cinit                
-00000c65  SysCtl_disableNMISource           
-00000c75  SysCtl_enableNMISource            
-00000c85  __TI_decompress_none              
-00000c95  SysCtl_getNMISourceStatus         
-00000ca1  __TI_zero_init                    
-00000cad  CS_startHFXT                      
-00000cb3  _system_pre_init                  
-00000cd0  __TI_Handler_Table_Base           
-00000cdc  __TI_Handler_Table_Limit          
-00000ce8  __TI_CINIT_Base                   
-00000cf8  __TI_CINIT_Limit                  
-20000000  __TI_cleanup_ptr                  
-20000004  __TI_dtors_ptr                    
-20000008  __TI_enable_exit_profile_output   
-2000000c  _lock                             
-20000010  _unlock                           
-20000014  main_func_sp                      
-20000018  SystemCoreClock                   
-2000001c  MCLKfreq                          
-20000020  SMCLKfreq                         
+00002940  overcast                          
+00005140  partlysunny                       
+00007940  sunny                             
+0000a140  twilight                          
+0000ce3b  dBfs                              
+0000d18d  parrotdelay                       
+0000d19b  Delay1ms                          
+0000d329  ST7735_InitB                      
+0000d349  ST7735_InitR                      
+0000d45d  ST7735_DrawPixel                  
+0000d4b7  ST7735_DrawFastVLine              
+0000d575  ST7735_DrawFastHLine              
+0000d62d  ST7735_FillScreen                 
+0000d671  ST7735_FillRect                   
+0000d77d  ST7735_Color565                   
+0000d7b1  ST7735_SwapColor                  
+0000d7e1  ST7735_DrawBitmap                 
+0000d9df  ST7735_DrawCharS                  
+0000db55  ST7735_DrawChar                   
+0000dcc7  ST7735_DrawString                 
+0000dd4d  ST7735_DrawString2                
+0000ddcd  fillmessage                       
+0000de0f  ST7735_SetCursor                  
+0000de3d  ST7735_OutUDec                    
+0000deb1  ST7735_SetRotation                
+0000df7b  ST7735_InvertDisplay              
+0000df93  ST7735_PlotClear                  
+0000dfef  ST7735_PlotPoint                  
+0000e0b5  ST7735_PlotLine                   
+0000e1ef  ST7735_PlotPoints                 
+0000e2c5  ST7735_PlotBar                    
+0000e31b  ST7735_PlotdBfs                   
+0000e365  ST7735_PlotNext                   
+0000e37f  ST7735_PlotNextErase              
+0000e3b9  ST7735_OutChar                    
+0000e475  ST7735_OutString                  
+0000e493  ST7735_SetTextColor               
+0000e4a7  fputc                             
+0000e4b9  fgetc                             
+0000e4c5  ferror                            
+0000e4d3  Output_Init                       
+0000e4e3  Output_Clear                      
+0000e4ed  Output_Off                        
+0000e4f5  Output_On                         
+0000e4fd  Output_Color                      
+0000e545  num_to_menu_item                  
+0000e593  LCD_init                          
+0000e5a3  num_to_enum                       
+0000e5f1  print_current_status_pic          
+0000e723  create_data_display               
+0000e8a1  SystemCoreClockUpdate             
+0000eb15  SystemInit                        
+0000ebc9  CS_getDCOFrequency                
+0000eccd  getMCLKfreq                       
+0000ecd3  getSMCLKfreq                      
+0000ecd9  clockStartUp                      
+0000ed13  clockInit48MHzXTL                 
+0000ed99  CS_startHFXTWithTimeout           
+0000eed1  __aeabi_memcpy                    
+0000eed1  __aeabi_memcpy4                   
+0000eed1  __aeabi_memcpy8                   
+0000eed1  memcpy                            
+0000ef6d  __aeabi_memclr                    
+0000ef6d  __aeabi_memclr4                   
+0000ef6d  __aeabi_memclr8                   
+0000ef6f  __aeabi_memset                    
+0000ef6f  __aeabi_memset4                   
+0000ef6f  __aeabi_memset8                   
+0000ef75  memset                            
+0000efe7  __mpu_init                        
+0000f059  __TI_auto_init                    
+0000f0c9  __TI_decompress_lzss              
+0000f131  _c_int00                          
+0000f185  C$$EXIT                           
+0000f189  abort                             
+0000f191  exit                              
+0000f1d9  SysCtl_getTLVInfo                 
+0000f275  copy_in                           
+0000f309  CS_clearInterruptFlag             
+0000f32d  OneMsDelay                        
+0000f337  TenMsDelay                        
+0000f349  main                              
+0000f365  CS_getMCLK                        
+0000f37d  CS_getSMCLK                       
+0000f395  _args_main                        
+0000f3ad  CS_setExternalClockSourceFrequency
+0000f3c1  _register_unlock                  
+0000f3c7  _register_lock                    
+0000f3cf  _nop                              
+0000f3e7  _system_post_cinit                
+0000f3e9  SysCtl_disableNMISource           
+0000f3f9  SysCtl_enableNMISource            
+0000f409  __TI_decompress_none              
+0000f419  SysCtl_getNMISourceStatus         
+0000f425  __TI_zero_init                    
+0000f431  CS_startHFXT                      
+0000f437  _system_pre_init                  
+0000f46c  __TI_Handler_Table_Base           
+0000f478  __TI_Handler_Table_Limit          
+0000f480  __TI_CINIT_Base                   
+0000f490  __TI_CINIT_Limit                  
+20000000  StX                               
+20000004  StY                               
+20000008  StTextColor                       
+20000010  lastj                             
+20000014  __TI_cleanup_ptr                  
+20000018  __TI_dtors_ptr                    
+2000001c  __TI_enable_exit_profile_output   
+20000020  _lock                             
+20000024  _unlock                           
+20000028  grid_color                        
+2000002a  menu_text_color                   
+2000002c  highlight_text_color              
+20000030  main_func_sp                      
+20000034  SystemCoreClock                   
+20000038  Message                           
+20000048  MCLKfreq                          
+2000004c  Messageindex                      
+20000050  SMCLKfreq                         
+20000054  X                                 
+20000058  Ymax                              
+2000005c  Ymin                              
+20000060  Yrange                            
 2000fe00  __stack                           
 20010000  __STACK_END                       
 4000480c  WDTCTL_SYM                        
@@ -315,4 +477,4 @@ ffffffff  binit
 UNDEFED   SHT$$INIT_ARRAY$$Base             
 UNDEFED   SHT$$INIT_ARRAY$$Limit            
 
-[72 symbols]
+[138 symbols]

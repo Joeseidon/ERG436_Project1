@@ -56,5 +56,6 @@ menu_items num_to_menu_item(int x);
 Light_Status num_to_enum(int x);
 void print_current_status_pic(Light_Status current_status);
 void create_data_display(void);
+void LCD_init(void);
 
 #endif /* LCD_H_ */

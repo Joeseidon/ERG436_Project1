@@ -72,6 +72,10 @@ int main(void)
 
     clockStartUp();
 
+    LCD_init();
+
+    create_data_display();
+
     while(1)
     {
         
