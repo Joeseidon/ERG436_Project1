@@ -65,6 +65,16 @@
 #include "ST7735.h"
 #include "LCD.h"
 
+#include "bme280.h"
+
+#include "BOSCH_Sensor.h"
+
+#include "clockConfig.h"
+
+#include "sysTick.h"
+
+#include "I2C_Interface.h"
+
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
@@ -81,10 +91,25 @@ int main(void)
     MAP_FPU_enableLazyStacking();
 
     /* Configuring SysTick */
-    MAP_SysTick_enableModule();
-    MAP_SysTick_setPeriod(12000000);
+   // MAP_SysTick_enableModule();
+    //MAP_SysTick_setPeriod(12000000);
     //MAP_Interrupt_enableSleepOnIsrExit();
 
+    clockStartUp();
+
+    I2C_Init();
+
+    sysTickInit();
+
+    rst=sensorInit();
+
+    validAddress = verifyDeviceAddress();
+    if(rst == BME280_E_DEV_NOT_FOUND){
+        //chip not found
+        ;
+    }
+
+    retrieveError=retrieveCalibratedData();
 
     LCD_init();
 
