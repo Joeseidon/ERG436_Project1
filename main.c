@@ -62,6 +62,7 @@
 
 /*Personal Library Includes*/
 #include "clockConfig.h"
+#include "environment_sensor.h"
 #include "ST7735.h"
 #include "LCD.h"
 
@@ -69,12 +70,18 @@ Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
 
+int res;
+struct bme280_dev dev;
+struct bme280_data compensated_data;
+
 int main(void)
 {
     /* Halting the Watchdog  */
     MAP_WDT_A_holdTimer();
 
     clockStartUp();
+
+    BME280_Init(&dev);
 
     /* Enabling the FPU for floating point operation */
     MAP_FPU_enableModule();
@@ -102,6 +109,16 @@ int main(void)
            print_current_status_pic(currentStatus);
            light_status_updated=0;
        }
+
+
+
+       // wait for the sensor to complete a measurement
+       // TODO: remove this, change to forced mode
+       timer32_Wait_ms(50);
+       // and get the data
+       res = BME280_Read(&dev, &compensated_data);
+
+
     }
 }
 void SysTick_Handler(void)

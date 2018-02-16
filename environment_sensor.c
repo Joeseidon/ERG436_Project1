@@ -15,12 +15,17 @@ int8_t BME280_Init(struct bme280_dev *dev) {
     int settings_select;
 
     I2C_Init();
+    /* TODO: for some reason when I put thisiInit function above the i2c_init
+     * function the i2c module wouldn't initialize properly?
+     */
+    timer32_Init();
+
     // configure I2C
     dev->dev_id = BME280_I2C_ADDR_PRIM;
     dev->intf = BME280_I2C_INTF;
     dev->read = (bme280_com_fptr_t) I2C_Read_String;
     dev->write = (bme280_com_fptr_t) I2C_Write_String;
-    dev->delay_ms = (bme280_delay_fptr_t) sysTick_Wait_ms;
+    dev->delay_ms = (bme280_delay_fptr_t) timer32_Wait_ms;
     // and initiate it
     res = bme280_init(dev);
 

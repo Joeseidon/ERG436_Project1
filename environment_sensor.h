@@ -10,7 +10,7 @@
 
 #include "bme280.h"
 #include "I2c.h"
-#include "systick.h"
+#include "timer_32.h"
 
 
 // Configures I2C and initializes BME280 in Normal Mode
