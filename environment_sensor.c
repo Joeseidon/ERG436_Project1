@@ -34,16 +34,15 @@ int8_t BME280_Init(struct bme280_dev *dev) {
     dev->settings.osr_p = BME280_OVERSAMPLING_16X;
     dev->settings.osr_t = BME280_OVERSAMPLING_2X;
     dev->settings.filter = BME280_FILTER_COEFF_16;
-    dev->settings.standby_time = BME280_STANDBY_TIME_62_5_MS;
     // settings select
     settings_select = BME280_OSR_PRESS_SEL;
     settings_select |= BME280_OSR_TEMP_SEL;
     settings_select |= BME280_OSR_HUM_SEL;
-    settings_select |= BME280_STANDBY_SEL;
     settings_select |= BME280_FILTER_SEL;
     // and set all the things
     res = bme280_set_sensor_settings(settings_select, dev);
-    res = bme280_set_sensor_mode(BME280_NORMAL_MODE, dev);
+    // set sensor into forced mode to initiate first measure
+    res = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
 
     return res;
 
@@ -53,8 +52,10 @@ int8_t BME280_Init(struct bme280_dev *dev) {
 int8_t BME280_Read(struct bme280_dev *dev, struct bme280_data *data) {
 
     int8_t res;
-
+    // read the sensor data
     res = bme280_get_sensor_data(BME280_ALL, data, dev);
+    // force sensor to measure after each read so we don't have to wait before
+    res = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
 
     return res;
 

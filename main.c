@@ -70,7 +70,10 @@ Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
 
+
+extern display_cell inside;
 int res;
+int read_sensor = 0;
 struct bme280_dev dev;
 struct bme280_data compensated_data;
 
@@ -111,12 +114,15 @@ int main(void)
        }
 
 
-
-       // wait for the sensor to complete a measurement
-       // TODO: remove this, change to forced mode
-       timer32_Wait_ms(50);
-       // and get the data
-       res = BME280_Read(&dev, &compensated_data);
+       // TODO: change systick to set a flag every 1s
+       if (read_sensor) {
+           res = BME280_Read(&dev, &compensated_data);
+           inside.humidity = compensated_data.humidity;
+           inside.pressure = compensated_data.pressure;
+           inside.temperature = compensated_data.temperature;
+           updateDataDisplay();
+           read_sensor = 0;
+       }
 
 
     }
@@ -128,5 +134,12 @@ void SysTick_Handler(void)
         currentStatus++;
         light_status_updated = 1;
         current_count=0;
+
+
+
+        // tell main loop to read bme280
+        read_sensor = 1;
+
     }
+
 }
