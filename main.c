@@ -95,7 +95,7 @@ int main(void)
     //MAP_SysTick_setPeriod(12000000);
     //MAP_Interrupt_enableSleepOnIsrExit();
 
-    clockStartUp();
+   // clockStartUp();
 
     I2C_Init();
 
