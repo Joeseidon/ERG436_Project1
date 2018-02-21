@@ -44,7 +44,7 @@ void I2C_Init(void) {
     UCB1CTLW0 &= ~0x0001;              // enable eUSCI module
     UCB1IE = 0x0000;                   // disable interrupts
 }
-void OneMsDelay(uint32_t n){
+void OneMs(uint32_t n){
     return;
 }
 void user_delay_ms(uint32_t period)
@@ -53,7 +53,7 @@ void user_delay_ms(uint32_t period)
      * Return control or wait,
      * for a period amount of milliseconds
      */
-    OneMsDelay(period);
+    OneMs(period);
     return;
 }
 

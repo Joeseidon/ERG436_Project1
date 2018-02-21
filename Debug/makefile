@@ -10,12 +10,16 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./BOSCH_Sensor.obj" \
+"./I2C_Interface.obj" \
 "./LCD.obj" \
 "./ST7735.obj" \
+"./bme280.obj" \
 "./clockConfig.obj" \
 "./delays.obj" \
 "./main.obj" \
 "./startup_msp432p401r_ccs.obj" \
+"./sysTick.obj" \
 "./system_msp432p401r.obj" \
 "./timerAInterface.obj" \
 "../driverlib_empty_project_ccs.cmd" \
@@ -164,8 +168,8 @@ EGR436_Project1.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "LCD.obj" "ST7735.obj" "clockConfig.obj" "delays.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" "timerAInterface.obj" 
-	-$(RM) "LCD.d" "ST7735.d" "clockConfig.d" "delays.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" "timerAInterface.d" 
+	-$(RM) "BOSCH_Sensor.obj" "I2C_Interface.obj" "LCD.obj" "ST7735.obj" "bme280.obj" "clockConfig.obj" "delays.obj" "main.obj" "startup_msp432p401r_ccs.obj" "sysTick.obj" "system_msp432p401r.obj" "timerAInterface.obj" 
+	-$(RM) "BOSCH_Sensor.d" "I2C_Interface.d" "LCD.d" "ST7735.d" "bme280.d" "clockConfig.d" "delays.d" "main.d" "startup_msp432p401r_ccs.d" "sysTick.d" "system_msp432p401r.d" "timerAInterface.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

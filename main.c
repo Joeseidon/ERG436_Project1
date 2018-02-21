@@ -78,6 +78,7 @@
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
+int8_t rst, retrieveError,validAddress;
 
 int main(void)
 {
@@ -128,7 +129,7 @@ int main(void)
            light_status_updated=0;
        }
     }
-}
+}/*
 void SysTick_Handler(void)
 {
     current_count++;
@@ -137,4 +138,4 @@ void SysTick_Handler(void)
         light_status_updated = 1;
         current_count=0;
     }
-}
+}*/
