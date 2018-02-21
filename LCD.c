@@ -205,7 +205,7 @@ void create_data_display(void){
 }
 
 void updateDataDisplay(void){
-    char data[6];
+    char data[12];
     //print temp
     sprintf(data,"%2.1f%cF",inside.temperature,247);
     TenMsDelay(1);
