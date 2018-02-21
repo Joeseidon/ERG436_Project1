@@ -42,7 +42,7 @@ char *menu_names[5] = {
 
 
 
-display_cell inside={
+volatile display_cell inside={
                 0,      //x_start
                 0,      //x_finish
                 0,      //y_start
@@ -53,7 +53,7 @@ display_cell inside={
                 5000     //Pressure
 };
 
-display_cell outside={
+volatile display_cell outside={
                 0,      //x_start
                 0,      //x_finish
                 0,      //y_start
@@ -229,7 +229,7 @@ void updateDataDisplay(void){
     ST7735_DrawString2(95,90,data,menu_text_color,ST7735_BLACK);
 
     //print bp
-    sprintf(data,"%2.1fmmHg",outside.pressure);
+    sprintf(data,"%2.1fmmHg",inside.pressure);
     TenMsDelay(1);
     ST7735_DrawString2(40,110,data,menu_text_color,ST7735_BLACK);
 }

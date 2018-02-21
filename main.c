@@ -71,7 +71,7 @@ Light_Status currentStatus = DARK;
 int current_count, target_count=8,light_status_updated=0;
 
 
-extern display_cell inside;
+extern volatile display_cell inside;
 int res;
 int read_sensor = 0;
 struct bme280_dev dev;
@@ -117,9 +117,9 @@ int main(void)
        // TODO: change systick to set a flag every 1s
        if (read_sensor) {
            res = BME280_Read(&dev, &compensated_data);
-           inside.humidity = compensated_data.humidity;
-           inside.pressure = compensated_data.pressure;
-           inside.temperature = compensated_data.temperature;
+           inside.pressure = (compensated_data.pressure / 99250.0)*(760.0/101325);
+           inside.humidity = compensated_data.humidity/1000.0;
+           inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
            updateDataDisplay();
            read_sensor = 0;
        }
