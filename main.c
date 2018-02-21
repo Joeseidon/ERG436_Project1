@@ -117,7 +117,13 @@ int main(void)
        // TODO: change systick to set a flag every 1s
        if (read_sensor) {
            res = BME280_Read(&dev, &compensated_data);
-           inside.pressure = ((compensated_data.pressure / 99.25)*(760.0/101.325) / 100);
+           //inside.pressure = ((compensated_data.pressure / 99.25)*(760.0/101.325) / 100);
+           //inside.pressure = ( ( (float)compensated_data.pressure / 100.0 ) * (0.760/101325.0) );
+           float temp_pressure = ( (float) compensated_data.pressure )/ 100.0;
+           //convert
+           temp_pressure *= ( 0.760 / 101325.0);
+           //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
+           inside.pressure = temp_pressure * 1000;
            inside.humidity = compensated_data.humidity/1000.0;
            inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
            updateDataDisplay();

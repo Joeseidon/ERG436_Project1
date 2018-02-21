@@ -52,10 +52,12 @@ int8_t BME280_Init(struct bme280_dev *dev) {
 int8_t BME280_Read(struct bme280_dev *dev, struct bme280_data *data) {
 
     int8_t res;
-    // read the sensor data
-    res = bme280_get_sensor_data(BME280_ALL, data, dev);
     // force sensor to measure after each read so we don't have to wait before
     res = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
+    dev->delay_ms(70);
+    // read the sensor data
+    res = bme280_get_sensor_data(BME280_ALL, data, dev);
+
 
     return res;
 
