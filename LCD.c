@@ -148,8 +148,8 @@ void print_current_status_pic(Light_Status current_status){
     case DARK:
         ST7735_DrawBitmap(horizontal_start, vertical_start, dark, picture_width, picture_hight);
         TenMsDelay(10);
-        /*ST7735_SetCursor(30,0);
-        ST7735_OutString("Status: Dark");*/
+        //ST7735_SetCursor(30,0);
+        //ST7735_OutString("Status: Dark");*/
         /*ST7735_DrawString(0,0,"Status: Dark        ", menu_text_color);
         break;
 
