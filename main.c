@@ -61,11 +61,21 @@
 #include <stdlib.h>
 
 /*Personal Library Includes*/
-#include "clockConfig.h"
-#include "environment_sensor.h"
+
+//#include "environment_sensor.h"
 #include "ST7735.h"
 #include "LCD.h"
 
+
+#include "bme280.h"
+
+#include "BOSCH_Sensor.h"
+
+#include "clockConfig.h"
+
+#include "sysTick.h"
+
+#include "I2C_Interface.h"
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
@@ -84,17 +94,20 @@ int main(void)
 
     clockStartUp();
 
-    BME280_Init(&dev);
+    //BME280_Init(&dev);
 
     /* Enabling the FPU for floating point operation */
     MAP_FPU_enableModule();
     MAP_FPU_enableLazyStacking();
 
     /* Configuring SysTick */
-    MAP_SysTick_enableModule();
-    MAP_SysTick_setPeriod(12000000);
+    //MAP_SysTick_enableModule();
+    //MAP_SysTick_setPeriod(12000000);
     //MAP_Interrupt_enableSleepOnIsrExit();
 
+    I2C_Init();
+
+    sysTickInit();
 
     LCD_init();
 
@@ -103,8 +116,16 @@ int main(void)
 
     updateDataDisplay();
 
-    MAP_SysTick_enableInterrupt();
+    //MAP_SysTick_enableInterrupt();
     MAP_Interrupt_enableMaster();
+
+    res=sensorInit();
+
+    res = verifyDeviceAddress();
+    if(res == BME280_E_DEV_NOT_FOUND){
+        //chip not found
+        ;
+    }
 
     while(1)
     {
@@ -112,34 +133,40 @@ int main(void)
            print_current_status_pic(currentStatus);
            light_status_updated=0;
        }
-
+       int i;
+       for(i=0; i<100000; i++);
 
        // TODO: change systick to set a flag every 1s
-       if (read_sensor) {
-           res = BME280_Read(&dev, &compensated_data);
-           inside.pressure = ((compensated_data.pressure / 99.25)*(760.0/101.325) / 100);
-           inside.humidity = compensated_data.humidity/1000.0;
-           inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
+       //if (read_sensor) {
+           //res = BME280_Read(&dev, &compensated_data);
+           res=retrieveCalibratedData();
+//           inside.pressure = ((compensated_data.pressure / 99.25)*(760.0/101.325) / 100);
+//           inside.humidity = compensated_data.humidity/1000.0;
+//           inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
+
+           inside.pressure = ((getPressure() / 99.25)*(760.0/101.325) / 100);
+           inside.humidity = getHumidity()/1000.0;
+           inside.temperature = (((getTemp() / 100.0) * (9.0/5.0)) + 32.0);
            updateDataDisplay();
            read_sensor = 0;
-       }
+       //}
 
 
     }
 }
-void SysTick_Handler(void)
-{
-    current_count++;
-    if(current_count==target_count){
-        currentStatus++;
-        light_status_updated = 1;
-        current_count=0;
-
-
-
-        // tell main loop to read bme280
-        read_sensor = 1;
-
-    }
-
-}
+//void SysTick_Handler(void)
+//{
+//    current_count++;
+//    if(current_count==target_count){
+//        currentStatus++;
+//        light_status_updated = 1;
+//        current_count=0;
+//
+//
+//
+//        // tell main loop to read bme280
+//        read_sensor = 1;
+//
+//    }
+//
+//}
