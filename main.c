@@ -66,10 +66,14 @@
 #include "ST7735.h"
 #include "LCD.h"
 
+#include "RTC_Module.h"
+
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
 
+int second_count;
+int reset_time = 0;
 
 extern volatile display_cell inside;
 int res;
@@ -80,9 +84,15 @@ struct bme280_data compensated_data;
 int main(void)
 {
     /* Halting the Watchdog  */
-    MAP_WDT_A_holdTimer();
+    //MAP_WDT_A_holdTimer();
 
     clockStartUp();
+
+    LCD_init();
+
+    RTC_Config();
+
+    RTC_Initial_Set();
 
     BME280_Init(&dev);
 
@@ -90,62 +100,74 @@ int main(void)
     MAP_FPU_enableModule();
     MAP_FPU_enableLazyStacking();
 
-    /* Configuring SysTick */
-    MAP_SysTick_enableModule();
-    MAP_SysTick_setPeriod(12000000);
-    //MAP_Interrupt_enableSleepOnIsrExit();
+    MAP_Interrupt_enableInterrupt(INT_RTC_C);
 
-
-    LCD_init();
+    //Clear display
+    Output_Clear();
 
     create_data_display();
     print_current_status_pic(currentStatus);
 
     updateDataDisplay();
 
-    MAP_SysTick_enableInterrupt();
     MAP_Interrupt_enableMaster();
 
     while(1)
     {
-       if(light_status_updated){
-           print_current_status_pic(currentStatus);
-           light_status_updated=0;
-       }
+        if(reset_time){
+           char time[10];
+           //Get current time (should be 1 minute later)
+           getRTCtime(time);
 
+           //Update displayed time
+           updateTimeandDate();
 
-       // TODO: change systick to set a flag every 1s
-       if (read_sensor) {
-           res = BME280_Read(&dev, &compensated_data);
-           //inside.pressure = ((compensated_data.pressure / 99.25)*(760.0/101.325) / 100);
-           //inside.pressure = ( ( (float)compensated_data.pressure / 100.0 ) * (0.760/101325.0) );
-           float temp_pressure = ( (float) compensated_data.pressure )/ 100.0;
-           //convert
-           temp_pressure *= ( 0.760 / 101325.0);
-           //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
-           inside.pressure = temp_pressure * 1000;
-           inside.humidity = compensated_data.humidity/1000.0;
-           inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
-           updateDataDisplay();
-           read_sensor = 0;
-       }
+           reset_time=0;
+        }
+
+        if ((second_count%10) == 0) {
+            //Retrieve sensor values
+            res = BME280_Read(&dev, &compensated_data);
+
+            float temp_pressure = ( (float) compensated_data.pressure )/ 100.0;
+            //convert
+            temp_pressure *= ( 0.760 / 101325.0);
+            //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
+            inside.pressure = temp_pressure * 1000;
+
+            //Convert value to percentage
+            inside.humidity = compensated_data.humidity/1000.0;
+
+            //Convert from degrees C to F
+            inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
+
+            //Send new values to the screen
+            updateDataDisplay();
+        }
+
+        if((second_count%20)==0){
+            print_current_status_pic(currentStatus);
+        }
 
 
     }
 }
-void SysTick_Handler(void)
+
+/* RTC ISR */
+void RTC_C_IRQHandler(void)
 {
-    current_count++;
-    if(current_count==target_count){
-        currentStatus++;
-        light_status_updated = 1;
-        current_count=0;
+    uint32_t status;
 
+    status = MAP_RTC_C_getEnabledInterruptStatus();
+    MAP_RTC_C_clearInterruptFlag(status);
 
-
-        // tell main loop to read bme280
-        read_sensor = 1;
-
+    if (status & RTC_C_CLOCK_READ_READY_INTERRUPT)
+    {
+        second_count++;
     }
-
+    if (status & RTC_C_TIME_EVENT_INTERRUPT)
+    {
+        /* Interrupts every minute - Set breakpoint here */
+        reset_time = 1;
+    }
 }

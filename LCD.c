@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "RTC_Module.h"
+
 /*Text File Includes*/
 #include "dark.txt"
 #include "overcast.txt"
@@ -50,7 +52,7 @@ volatile display_cell inside={
                 " ",    //display title
                 71.5,    //temp
                 22.5,    //humidity
-                5000     //Pressure
+                760     //Pressure
 };
 
 volatile display_cell outside={
@@ -61,7 +63,7 @@ volatile display_cell outside={
                 " ",    //display title
                 33.5,    //temp
                 22.0,    //humidity
-                4000     //Pressure
+                750     //Pressure
 };
 
 forecast light_status_items[5]={
@@ -128,6 +130,16 @@ Light_Status num_to_enum(int x){
     return current_status;
 }
 
+//Use this function once ADC & Photocell are implemented
+/*
+void print_current_status_pic(int photocell_value){
+    int i;
+    for(i=0; i<5;i++){
+        if(photocell_value > light_status_items[i].minR && photocell_value < light_status_items[i].maxR){
+            ST7735_DrawBitmap(light_status_items[i].x, light_status_items[i].y, light_status_items[i].image, light_status_items[i].width, light_status_items[i].height);
+        }
+    }
+}*/
 void print_current_status_pic(Light_Status current_status){
 
     int i;
@@ -186,9 +198,6 @@ void updateForecast(Light_Status newForecast){
 void create_data_display(void){
     //Draw inside display
     ST7735_DrawString2(110,50,"Out",menu_text_color,ST7735_BLACK);
-    //ST7735_DrawFastHLine(100,65,50,grid_color);
-    //ST7735_DrawString2(90,70,"T:",menu_text_color,ST7735_BLACK);
-    //ST7735_DrawString2(90,90,"H:",menu_text_color,ST7735_BLACK);
 
     //Draw outside display
     ST7735_DrawString2(15,50,"In",menu_text_color,ST7735_BLACK);
@@ -200,8 +209,7 @@ void create_data_display(void){
     ST7735_DrawString2(10,110,"Bp",menu_text_color,ST7735_BLACK);
     ST7735_DrawFastHLine(0,108,160,grid_color);
 
-    ST7735_DrawString2(0,5,"HH:MM",menu_text_color,ST7735_BLACK);
-    ST7735_DrawString2(100,5,"MM/DD",menu_text_color,ST7735_BLACK);
+    updateTimeandDate();
 }
 
 void updateDataDisplay(void){
@@ -232,6 +240,16 @@ void updateDataDisplay(void){
     sprintf(data,"%2.1fmmHg",inside.pressure);
     TenMsDelay(1);
     ST7735_DrawString2(40,110,data,menu_text_color,ST7735_BLACK);
+}
+
+void updateTimeandDate(void){
+    RTC_C_Calendar *time;
+    time = getNewTime();
+    char temp[5];
+    sprintf(temp,"%02d:%02d",time->hours,time->minutes);
+    ST7735_DrawString2(0,5,temp,menu_text_color,ST7735_BLACK);
+    sprintf(temp,"%02d/%02d",time->month,time->dayOfmonth);
+    ST7735_DrawString2(100,5,temp,menu_text_color,ST7735_BLACK);
 }
 
 
