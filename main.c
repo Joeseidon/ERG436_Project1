@@ -79,6 +79,7 @@ int second_count;
 int reset_time = 0;
 
 extern volatile display_cell inside;
+extern volatile display_cell outside;
 int res;
 int read_sensor = 0;
 struct bme280_dev dev;
@@ -205,15 +206,14 @@ int main(void)
             msprf24_irq_clear(RF24_IRQ_RX);
             user = buf[0];
 
-            if (buf[0] == '0')
+            //Decode Packet Data
+            /*if (buf[0] == '0')
                 P1OUT &= ~BIT0;
             if (buf[0] == '1')
-                P1OUT |= BIT0;
-            //if (buf[1] == '0')
-            //    P2OUT &= ~BIT2;
-            //if (buf[1] == '1')
-            //    P2OUT |= BIT2;
-
+                P1OUT |= BIT0;*/
+            float light_status = 0.0;
+            sscanf(buf, "%f,%f,%f,%f",&outside.humidity,&outside.pressure,&outside.temperature,&light_status);
+            updateDataDisplay();
 
         } else {
             user = 0xFF;

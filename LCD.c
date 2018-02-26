@@ -237,7 +237,7 @@ void updateDataDisplay(void){
     ST7735_DrawString2(95,90,data,menu_text_color,ST7735_BLACK);
 
     //print bp
-    sprintf(data,"%2.1fmmHg",inside.pressure);
+    sprintf(data,"%2.1fmmHg",outside.pressure);
     TenMsDelay(1);
     ST7735_DrawString2(40,110,data,menu_text_color,ST7735_BLACK);
 }
