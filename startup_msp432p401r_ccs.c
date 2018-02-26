@@ -102,7 +102,7 @@ extern void PORT1_IRQHandler    (void) __attribute__((weak,alias("Default_Handle
 extern void PORT2_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 extern void PORT3_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 extern void PORT4_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
-extern void PORT5_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
+extern void PORT5_ISR(void);
 extern void PORT6_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to */
@@ -168,7 +168,7 @@ void (* const interruptVectors[])(void) =
     PORT2_IRQHandler,                      /* Port2 Interrupt           */
     PORT3_IRQHandler,                      /* Port3 Interrupt           */
     PORT4_IRQHandler,                      /* Port4 Interrupt           */
-    PORT5_IRQHandler,                      /* Port5 Interrupt           */
+    PORT5_ISR,                      /* Port5 Interrupt           */
     PORT6_IRQHandler                       /* Port6 Interrupt           */
 };
 

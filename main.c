@@ -68,6 +68,9 @@
 
 #include "RTC_Module.h"
 
+#include "msp432_spi.h"
+#include "msprf24.h"
+
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
@@ -81,12 +84,56 @@ int read_sensor = 0;
 struct bme280_dev dev;
 struct bme280_data compensated_data;
 
+//RF
+extern volatile uint8_t rf_irq;
+volatile unsigned int user;
+
 int main(void)
 {
     /* Halting the Watchdog  */
     //MAP_WDT_A_holdTimer();
+    uint8_t addr[5];
+    uint8_t buf[32];
+
+    // Red LED will be our output
+    P1DIR |= BIT0;
+    P1OUT &= ~(BIT0);
+
+    //setup IRQ
+    P5DIR &= ~BIT0;  // IRQ line is input
+    P5OUT |= BIT0;   // Pull-up resistor enabled
+    P5REN |= BIT0;
+    P5IES |= BIT0;   // Trigger on falling-edge
+    P5IFG &= ~BIT0;  // Clear any outstanding IRQ
+    P5IE |= BIT0;    // Enable IRQ interrupt
+    P5IFG &= 0; // clear flag
+
+    MAP_Interrupt_enableInterrupt(INT_PORT5);
+
+    user = 0xFE;
 
     clockStartUp();
+
+    /* Initial values for nRF24L01+ library config variables */
+    rf_crc = RF24_EN_CRC | RF24_CRCO; // CRC enabled, 16-bit
+    rf_addr_width      = 5;
+    rf_speed_power     = RF24_SPEED_1MBPS | RF24_POWER_0DBM;
+    rf_channel         = 120;
+
+    msprf24_init();
+    msprf24_set_pipe_packetsize(0, 32);
+    msprf24_open_pipe(0, 1);  // Open pipe#0 with Enhanced ShockBurst
+
+    // Set our RX address
+    addr[0] = 0xDE; addr[1] = 0xAD; addr[2] = 0xBE; addr[3] = 0xEF; addr[4] = 0x00;
+    w_rx_addr(0, addr);
+
+    // Receive mode
+    if (!(RF24_QUEUE_RXEMPTY & msprf24_queue_state())) {
+        flush_rx();
+    }
+
+    msprf24_activate_rx();
 
     LCD_init();
 
@@ -149,7 +196,28 @@ int main(void)
             print_current_status_pic(currentStatus);
         }
 
+        if (rf_irq & RF24_IRQ_FLAGGED) {
+            rf_irq &= ~RF24_IRQ_FLAGGED;
+            msprf24_get_irq_reason();
+        }
+        if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
+            r_rx_payload(32, buf);
+            msprf24_irq_clear(RF24_IRQ_RX);
+            user = buf[0];
 
+            if (buf[0] == '0')
+                P1OUT &= ~BIT0;
+            if (buf[0] == '1')
+                P1OUT |= BIT0;
+            //if (buf[1] == '0')
+            //    P2OUT &= ~BIT2;
+            //if (buf[1] == '1')
+            //    P2OUT |= BIT2;
+
+
+        } else {
+            user = 0xFF;
+        }
     }
 }
 
@@ -169,5 +237,19 @@ void RTC_C_IRQHandler(void)
     {
         /* Interrupts every minute - Set breakpoint here */
         reset_time = 1;
+    }
+}
+
+void PORT5_ISR(void){
+    uint32_t status;
+
+    status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
+    //MAP_GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
+    P5IFG &= ~BIT0; // clear flag
+
+    if(status & GPIO_PIN0)
+    {
+        //RF_Flag=0x80;
+        rf_irq |= RF24_IRQ_FLAGGED;
     }
 }
