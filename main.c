@@ -88,6 +88,7 @@ struct bme280_data compensated_data;
 //RF
 extern volatile uint8_t rf_irq;
 volatile unsigned int user;
+int first_rx = 1;
 
 int main(void)
 {
@@ -95,6 +96,7 @@ int main(void)
     //MAP_WDT_A_holdTimer();
     uint8_t addr[5];
     uint8_t buf[32];
+    uint8_t time_buf[14];
 
     // Red LED will be our output
     P1DIR |= BIT0;
@@ -140,7 +142,10 @@ int main(void)
 
     RTC_Config();
 
-    RTC_Initial_Set();
+    //RTC_Initial_Set();
+
+    //used while debugging. Avoid Cap touch time input
+    debugTimeSet();
 
     BME280_Init(&dev);
 
@@ -173,7 +178,7 @@ int main(void)
            reset_time=0;
         }
 
-        if ((second_count%10) == 0) {
+        if ((second_count%30) == 0) {
             //Retrieve sensor values
             res = BME280_Read(&dev, &compensated_data);
 
@@ -191,9 +196,12 @@ int main(void)
 
             //Send new values to the screen
             updateDataDisplay();
+
+            //TODO: Move this to a place where it will update after both readings
+            update_totals();
         }
 
-        if((second_count%20)==0){
+        if((second_count%10)==0){
             print_current_status_pic(currentStatus);
         }
 
@@ -203,6 +211,20 @@ int main(void)
         }
         if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
             r_rx_payload(32, buf);
+
+            //acknowledge data transmition
+            if (first_rx){
+                first_rx = 0;
+                RTC_C_Calendar *time = getNewTime();
+                sprintf(time_buf,"%02.0d,%02.0d,%02.0d,%02.0d,%02.0d",
+                        time->hours,
+                        time->minutes,
+                        time->dayOfmonth,
+                        time->month,
+                        time->year);
+            }
+            w_ack_payload(0,14,time_buf);
+
             msprf24_irq_clear(RF24_IRQ_RX);
             user = buf[0];
 
@@ -213,6 +235,9 @@ int main(void)
                 P1OUT |= BIT0;*/
             float light_status = 0.0;
             sscanf(buf, "%f,%f,%f,%f",&outside.humidity,&outside.pressure,&outside.temperature,&light_status);
+
+
+
             updateDataDisplay();
 
         } else {

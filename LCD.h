@@ -53,6 +53,17 @@ typedef struct display_cell{
     float temperature;
     float humidity;
     float pressure;
+
+    /*Used to compute change over hour period*/
+    float temp_total;
+    float humidity_total;
+    float pressure_total;
+
+    int measurement_count;
+
+    int temp_change_direction;
+    int humidity_change_direction;
+    int pressure_change_direction;
 }display_cell;
 
 //typedef struct menu_item menu_item;
@@ -92,5 +103,9 @@ void updateForecast(Light_Status newForecast);
 void updateDataDisplay(void);
 
 void updateTimeandDate(void);
+
+void update_totals(void);
+
+int getChangeOrientation(float total, int count, float current);
 
 #endif /* LCD_H_ */

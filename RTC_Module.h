@@ -28,6 +28,8 @@ void RTC_Config(void);
 
 void RTC_Initial_Set(void);
 
+void debugTimeSet(void);
+
 void getRTCtime(char *data);
 
 RTC_C_Calendar *getNewTime(void);

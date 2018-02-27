@@ -37,7 +37,7 @@ RTC_C_Calendar currentTime =
      10,
      12,
      11,
-     00,
+     01,
      2018
 };
 
@@ -204,7 +204,12 @@ void RTC_Initial_Set(void){
     MAP_RTC_C_startClock();
     return;
 }
+void debugTimeSet(void){
+    MAP_RTC_C_initCalendar(&currentTime, RTC_C_FORMAT_BINARY);
 
+    /* Start RTC Clock */
+    MAP_RTC_C_startClock();
+}
 void getRTCtime(char *data){
     newtime = MAP_RTC_C_getCalendarTime();
     sprintf(data,"%02.0d:%02.0d",newtime.hours,newtime.minutes);
