@@ -71,6 +71,16 @@
 #include "msp432_spi.h"
 #include "msprf24.h"
 
+#include "RF_Module.h"
+
+void config_transmition_leds(void){
+    //RED for RF RX
+    //GREEN for BME sensor read
+    //BLUE for RTC Update
+    P2DIR |= BIT0|BIT1|BIT2;
+    P2OUT &= ~(BIT0|BIT1|BIT2);
+}
+
 Light_Status currentStatus = DARK;
 
 int current_count, target_count=8,light_status_updated=0;
@@ -89,63 +99,29 @@ struct bme280_data compensated_data;
 extern volatile uint8_t rf_irq;
 volatile unsigned int user;
 int first_rx = 1;
+int light_level = 0;
+uint8_t buf[32];
 
 int main(void)
 {
-    /* Halting the Watchdog  */
-    //MAP_WDT_A_holdTimer();
-    uint8_t addr[5];
-    uint8_t buf[32];
-    uint8_t time_buf[14];
+    config_transmition_leds();
 
-    // Red LED will be our output
-    P1DIR |= BIT0;
-    P1OUT &= ~(BIT0);
-
-    //setup IRQ
-    P5DIR &= ~BIT0;  // IRQ line is input
-    P5OUT |= BIT0;   // Pull-up resistor enabled
-    P5REN |= BIT0;
-    P5IES |= BIT0;   // Trigger on falling-edge
-    P5IFG &= ~BIT0;  // Clear any outstanding IRQ
-    P5IE |= BIT0;    // Enable IRQ interrupt
-    P5IFG &= 0; // clear flag
-
-    MAP_Interrupt_enableInterrupt(INT_PORT5);
+    RF_IRQ_Init();
 
     user = 0xFE;
 
     clockStartUp();
 
-    /* Initial values for nRF24L01+ library config variables */
-    rf_crc = RF24_EN_CRC | RF24_CRCO; // CRC enabled, 16-bit
-    rf_addr_width      = 5;
-    rf_speed_power     = RF24_SPEED_1MBPS | RF24_POWER_0DBM;
-    rf_channel         = 105;
-
-    msprf24_init();
-    msprf24_set_pipe_packetsize(0, 32);
-    msprf24_open_pipe(0, 1);  // Open pipe#0 with Enhanced ShockBurst
-
-    // Set our RX address
-    addr[0] = 0xEE; addr[1] = 0xAD; addr[2] = 0xBE; addr[3] = 0xEF; addr[4] = 0x00;
-    w_rx_addr(0, addr);
-
-    // Receive mode
-    if (!(RF24_QUEUE_RXEMPTY & msprf24_queue_state())) {
-        flush_rx();
-    }
-
-    msprf24_activate_rx();
+    RF_Module_Init_RX();
 
     LCD_init();
 
     RTC_Config();
 
-    RTC_Initial_Set();
+    //RTC_Initial_Set();
 
     //used while debugging. Avoid Cap touch time input
-    //debugTimeSet();
+    debugTimeSet();
 
     BME280_Init(&dev);
 
@@ -168,17 +144,20 @@ int main(void)
     while(1)
     {
         if(reset_time){
-           char time[10];
-           //Get current time (should be 1 minute later)
-           getRTCtime(time);
+            P2OUT |= BIT2; //Blue for RTC update
+            char time[10];
+            //Get current time (should be 1 minute later)
+            getRTCtime(time);
 
-           //Update displayed time
-           updateTimeandDate();
+            //Update displayed time
+            updateTimeandDate();
 
-           reset_time=0;
+            reset_time=0;
+            P2OUT &= ~BIT2;
         }
 
         if ((second_count%30) == 0) {
+            P2OUT |= BIT1; //Green For BME sensor
             //Retrieve sensor values
             res = BME280_Read(&dev, &compensated_data);
 
@@ -200,42 +179,21 @@ int main(void)
             //Send new values to the screen
             updateDataDisplay();
 
-
+            P2OUT &= ~BIT1;
         }
 
-        /*if((second_count%10)==0){
-            print_current_status_pic(currentStatus);
-        }*/
         if((second_count%10)==0){
             if (rf_irq & RF24_IRQ_FLAGGED) {
                 rf_irq &= ~RF24_IRQ_FLAGGED;
                 msprf24_get_irq_reason();
             }
             if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
+                P2OUT |= BIT0; //Red LED for RF transmition
                 r_rx_payload(32, buf);
-
-                //acknowledge data transmition
-               /*if (first_rx){
-                    first_rx = 0;
-                    RTC_C_Calendar *time = getNewTime();
-                    sprintf(time_buf,"%02.0d,%02.0d,%02.0d,%02.0d,%02.0d",
-                            time->hours,
-                            time->minutes,
-                            time->dayOfmonth,
-                            time->month,
-                            time->year);
-                }
-                w_ack_payload(0,14,time_buf);*/
 
                 msprf24_irq_clear(RF24_IRQ_RX);
                 user = buf[0];
 
-                //Decode Packet Data
-                /*if (buf[0] == '0')
-                    P1OUT &= ~BIT0;
-                if (buf[0] == '1')
-                    P1OUT |= BIT0;*/
-                int light_level = 0;
                 sscanf(buf, "%f,%f,%f,%d",&outside.humidity,&outside.pressure,&outside.temperature,&light_level);
                 updateForecast(light_level);
 
@@ -243,6 +201,8 @@ int main(void)
                 update_totals(0,1);
 
                 updateDataDisplay();
+
+                P2OUT &= ~BIT0;
 
             } else {
                 user = 0xFF;
