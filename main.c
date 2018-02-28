@@ -121,14 +121,14 @@ int main(void)
     rf_crc = RF24_EN_CRC | RF24_CRCO; // CRC enabled, 16-bit
     rf_addr_width      = 5;
     rf_speed_power     = RF24_SPEED_1MBPS | RF24_POWER_0DBM;
-    rf_channel         = 120;
+    rf_channel         = 105;
 
     msprf24_init();
     msprf24_set_pipe_packetsize(0, 32);
     msprf24_open_pipe(0, 1);  // Open pipe#0 with Enhanced ShockBurst
 
     // Set our RX address
-    addr[0] = 0xDE; addr[1] = 0xAD; addr[2] = 0xBE; addr[3] = 0xEF; addr[4] = 0x00;
+    addr[0] = 0xEE; addr[1] = 0xAD; addr[2] = 0xBE; addr[3] = 0xEF; addr[4] = 0x00;
     w_rx_addr(0, addr);
 
     // Receive mode
@@ -201,47 +201,48 @@ int main(void)
             update_totals();
         }
 
-        if((second_count%10)==0){
+        /*if((second_count%10)==0){
             print_current_status_pic(currentStatus);
-        }
-
-        if (rf_irq & RF24_IRQ_FLAGGED) {
-            rf_irq &= ~RF24_IRQ_FLAGGED;
-            msprf24_get_irq_reason();
-        }
-        if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
-            r_rx_payload(32, buf);
-
-            //acknowledge data transmition
-            if (first_rx){
-                first_rx = 0;
-                RTC_C_Calendar *time = getNewTime();
-                sprintf(time_buf,"%02.0d,%02.0d,%02.0d,%02.0d,%02.0d",
-                        time->hours,
-                        time->minutes,
-                        time->dayOfmonth,
-                        time->month,
-                        time->year);
+        }*/
+        if((second_count%10)==0){
+            if (rf_irq & RF24_IRQ_FLAGGED) {
+                rf_irq &= ~RF24_IRQ_FLAGGED;
+                msprf24_get_irq_reason();
             }
-            w_ack_payload(0,14,time_buf);
+            if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
+                r_rx_payload(32, buf);
 
-            msprf24_irq_clear(RF24_IRQ_RX);
-            user = buf[0];
+                //acknowledge data transmition
+               /*if (first_rx){
+                    first_rx = 0;
+                    RTC_C_Calendar *time = getNewTime();
+                    sprintf(time_buf,"%02.0d,%02.0d,%02.0d,%02.0d,%02.0d",
+                            time->hours,
+                            time->minutes,
+                            time->dayOfmonth,
+                            time->month,
+                            time->year);
+                }
+                w_ack_payload(0,14,time_buf);*/
 
-            //Decode Packet Data
-            /*if (buf[0] == '0')
-                P1OUT &= ~BIT0;
-            if (buf[0] == '1')
-                P1OUT |= BIT0;*/
-            float light_status = 0.0;
-            sscanf(buf, "%f,%f,%f,%f",&outside.humidity,&outside.pressure,&outside.temperature,&light_status);
+                msprf24_irq_clear(RF24_IRQ_RX);
+                user = buf[0];
+
+                //Decode Packet Data
+                /*if (buf[0] == '0')
+                    P1OUT &= ~BIT0;
+                if (buf[0] == '1')
+                    P1OUT |= BIT0;*/
+                int light_level = 0;
+                sscanf(buf, "%f,%f,%f,%d",&outside.humidity,&outside.pressure,&outside.temperature,&light_level);
+                updateForecast(light_level);
 
 
+                updateDataDisplay();
 
-            updateDataDisplay();
-
-        } else {
-            user = 0xFF;
+            } else {
+                user = 0xFF;
+            }
         }
     }
 }

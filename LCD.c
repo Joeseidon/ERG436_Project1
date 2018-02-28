@@ -209,8 +209,9 @@ void print_current_status_pic(Light_Status current_status){
     }*/
 }
 
-void updateForecast(Light_Status newForecast){
-    return;
+void updateForecast(int forecast_code){
+    Light_Status new = num_to_enum(forecast_code);
+    print_current_status_pic(new);
 }
 
 void create_data_display(void){

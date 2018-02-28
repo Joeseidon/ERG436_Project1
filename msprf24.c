@@ -422,10 +422,11 @@ void msprf24_init()
 	msprf24_set_address_width();
 	rf_feature = 0x00;  // Initialize this so we're starting from a clean slate
 	msprf24_enable_feature(RF24_EN_DPL);      // Dynamic payload size capability (set with msprf24_set_pipe_packetsize(x, 0))
+
 	msprf24_enable_feature(RF24_EN_DYN_ACK);  // Ability to use w_tx_payload_noack()
 
 
-	msprf24_enable_feature(RF24_EN_ACK_PAY); //enabled manual ack
+	//msprf24_enable_feature(RF24_EN_ACK_PAY); //enabled manual ack
 
 	msprf24_powerdown();
 	flush_tx();
