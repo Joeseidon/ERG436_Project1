@@ -262,41 +262,44 @@ void updateDataDisplay(void){
     ST7735_DrawString2(40,110,data,menu_text_color,ST7735_BLACK);
 }
 
-void update_totals(void){
+void update_totals(int update_inside, int update_outside){
     //increments measurement totals and count for average comparisons
     //Also the direction of change is set
 
     //inside data
-    inside.measurement_count++;
-    inside.temp_total+=inside.temperature;
-    inside.pressure_total+=inside.pressure;
-    inside.humidity_total+=inside.humidity;
+    if(update_inside){
+        inside.measurement_count++;
+        inside.temp_total+=inside.temperature;
+        inside.pressure_total+=inside.pressure;
+        inside.humidity_total+=inside.humidity;
 
-    inside.temp_change_direction=getChangeOrientation(inside.temp_total,
-                                                      inside.measurement_count,
-                                                      inside.temperature);
-    inside.humidity_change_direction=getChangeOrientation(inside.humidity_total,
+        inside.temp_change_direction=getChangeOrientation(inside.temp_total,
                                                           inside.measurement_count,
-                                                          inside.humidity);
-    inside.pressure_change_direction=getChangeOrientation(inside.pressure_total,
-                                                          inside.measurement_count,
-                                                          inside.pressure);
-
+                                                          inside.temperature);
+        inside.humidity_change_direction=getChangeOrientation(inside.humidity_total,
+                                                              inside.measurement_count,
+                                                              inside.humidity);
+        inside.pressure_change_direction=getChangeOrientation(inside.pressure_total,
+                                                              inside.measurement_count,
+                                                              inside.pressure);
+    }
     //outside data
-    outside.measurement_count++;
-    outside.temp_total+=outside.temperature;
-    outside.pressure_total+=outside.pressure;
-    outside.humidity_total+=outside.humidity;
+    if(update_outside){
+        outside.measurement_count++;
+        outside.temp_total+=outside.temperature;
+        outside.pressure_total+=outside.pressure;
+        outside.humidity_total+=outside.humidity;
 
-    outside.temp_change_direction=getChangeOrientation(outside.temp_total,
-                                                      outside.measurement_count,
-                                                      outside.temperature);
-    outside.humidity_change_direction=getChangeOrientation(outside.humidity_total,
-                                                          outside.measurement_count,
-                                                          outside.humidity);
-    outside.pressure_change_direction=getChangeOrientation(outside.pressure_total,
-                                                          outside.measurement_count,
-                                                          outside.pressure);
+        outside.temp_change_direction=getChangeOrientation(outside.temp_total,
+                                                              outside.measurement_count,
+                                                              outside.temperature);
+        outside.humidity_change_direction=getChangeOrientation(outside.humidity_total,
+                                                              outside.measurement_count,
+                                                              outside.humidity);
+        outside.pressure_change_direction=getChangeOrientation(outside.pressure_total,
+                                                              outside.measurement_count,
+                                                              outside.pressure);
+    }
 }
 
 int getChangeOrientation(float total, int count, float current){

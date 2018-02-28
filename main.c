@@ -142,10 +142,10 @@ int main(void)
 
     RTC_Config();
 
-    //RTC_Initial_Set();
+    RTC_Initial_Set();
 
     //used while debugging. Avoid Cap touch time input
-    debugTimeSet();
+    //debugTimeSet();
 
     BME280_Init(&dev);
 
@@ -194,11 +194,13 @@ int main(void)
             //Convert from degrees C to F
             inside.temperature = (((compensated_data.temperature / 100.0) * (9.0/5.0)) + 32.0);
 
+            //update inside trend
+            update_totals(1,0);
+
             //Send new values to the screen
             updateDataDisplay();
 
-            //TODO: Move this to a place where it will update after both readings
-            update_totals();
+
         }
 
         /*if((second_count%10)==0){
@@ -237,6 +239,8 @@ int main(void)
                 sscanf(buf, "%f,%f,%f,%d",&outside.humidity,&outside.pressure,&outside.temperature,&light_level);
                 updateForecast(light_level);
 
+                //update outside trend
+                update_totals(0,1);
 
                 updateDataDisplay();
 

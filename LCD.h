@@ -104,7 +104,7 @@ void updateDataDisplay(void);
 
 void updateTimeandDate(void);
 
-void update_totals(void);
+void update_totals(int update_inside, int update_outside);
 
 int getChangeOrientation(float total, int count, float current);
 
