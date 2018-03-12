@@ -250,10 +250,11 @@ int main(void)
 
             //Format pressure measurement
             float temp_pressure = ( (float) compensated_data.pressure )/ 100.0;
-            //convert
-            temp_pressure *= ( 0.760 / 101325.0);
-            //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
 
+            //convert from kPa to mmHg
+            temp_pressure *= ( 0.760 / 101325.0);
+
+            //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
             //Save current formated measurement
             inside.pressure = temp_pressure * 1000;
 
