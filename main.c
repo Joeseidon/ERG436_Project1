@@ -103,12 +103,13 @@ int reset_time = 0;
 extern volatile display_cell inside;
 extern volatile display_cell outside;
 
+//BME280 variables
 int res;
 int read_sensor = 0;
 struct bme280_dev dev;
 struct bme280_data compensated_data;
 
-//RF
+//RF variables
 extern volatile uint8_t rf_irq;
 volatile unsigned int user;
 int first_rx = 1;
@@ -119,16 +120,13 @@ int main(void)
 {
     /*
      * Configure the MSP432's onboard RGB LED
-     * such that the three primary colors can
-     * be used to indicate high priority method
-     * execution.
+     * as indicators.
      */
     config_transmition_leds();
 
     /*
      * Configures P5.0 as an interrupt pin
-     * for the RF module. The trigger is
-     * set on the falling edge.
+     * for the RF module.
      */
     RF_IRQ_Init();
 
@@ -141,15 +139,12 @@ int main(void)
 
     /*
      * Starts up the external oscillator and
-     * configures MCLk to be sourced for the
-     * external oscillator with a frequency of
-     * 48MHz. SMCLK is then sourced from MCLK
-     * and divided down to 12MHz.
+     * configures MCLk for 48MHz and SMCLK for 12 MHz
      */
     clockStartUp();
 
     /*
-     * The RF module is setup to be primary reciever
+     * The RF module is setup to be primary receiver
      * with auto retransmit acknowledgment packets.
      */
     RF_Module_Init_RX();
@@ -164,21 +159,17 @@ int main(void)
      * Configures pins on port J for RTC use. The low
      * frequency external oscillator is then started.
      * An interrupt is then setup of every minute. This
-     * method also initializes the capcative touch interface
+     * method also initializes the cap touch interface
      * used to receive user input.
      */
     RTC_Config();
 
     /*
-     * Using the capactiie touch interface, this method
-     * receives the current time and date fomr he user
-     * so that he on-board RTC can be initialized with
-     * the correct values.
+     * Using the cap touch interface, this method
+     * receives the current time and date from the
+     * user.
      */
-    //RTC_Initial_Set();
-
-    //used while debugging. Avoid Cap touch time input
-    debugTimeSet();
+    RTC_Initial_Set();
 
     /*
      * This method established the settings for the
@@ -200,7 +191,7 @@ int main(void)
      */
     MAP_Interrupt_enableInterrupt(INT_RTC_C);
 
-    //Clear display
+    //Clear LCD display
     Output_Clear();
 
     /*
@@ -227,8 +218,11 @@ int main(void)
     while(1)
     {
         if(reset_time){
-            P2OUT |= BIT2; //Blue for RTC update
+            //Blue for RTC update
+            P2OUT |= BIT2;
+
             char time[10];
+
             //Get current time (should be 1 minute later)
             getRTCtime(time);
 
@@ -242,8 +236,9 @@ int main(void)
             P2OUT &= ~BIT2;
         }
 
-        if ((second_count%30) == 0) {
-            P2OUT |= BIT1; //Green For BME sensor
+        if ((second_count%15) == 0) {
+            //Green For BME sensor
+            P2OUT |= BIT1;
 
             //Retrieve sensor values from BME280
             res = BME280_Read(&dev, &compensated_data);
@@ -257,6 +252,9 @@ int main(void)
             //scale by 1000 for mmHg. Conversion leaves the value in decimal notation
             //Save current formated measurement
             inside.pressure = temp_pressure * 1000;
+
+            //Correct for altitude
+            inside.pressure += 17;
 
             //Save formated humidity measurement
             inside.humidity = compensated_data.humidity/1000.0; //Convert value to percentage
@@ -284,7 +282,8 @@ int main(void)
                 msprf24_get_irq_reason();
             }
             if (rf_irq & RF24_IRQ_RX || msprf24_rx_pending()) {
-                P2OUT |= BIT0; //Red LED for RF transmition
+                //Red LED for RF receive
+                P2OUT |= BIT0;
 
                 //Configure RF packet payload size
                 r_rx_payload(32, buf);

@@ -129,7 +129,8 @@ void RTC_Initial_Set(void){
                 case MONTH:
                     currentTime.month = temp;
                     current_Stage = YEAR;
-                    //SET_TIME=1;//break loop
+                    currentTime.year = 2018;
+                    SET_TIME=1;//break loop
                     break;
                 case YEAR:
                     currentTime.year = (2000+temp);

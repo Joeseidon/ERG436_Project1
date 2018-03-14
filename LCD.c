@@ -148,16 +148,6 @@ Light_Status num_to_enum(int x){
     return current_status;
 }
 
-//Use this function once ADC & Photocell are implemented
-/*
-void print_current_status_pic(int photocell_value){
-    int i;
-    for(i=0; i<5;i++){
-        if(photocell_value > light_status_items[i].minR && photocell_value < light_status_items[i].maxR){
-            ST7735_DrawBitmap(light_status_items[i].x, light_status_items[i].y, light_status_items[i].image, light_status_items[i].width, light_status_items[i].height);
-        }
-    }
-}*/
 void print_current_status_pic(Light_Status current_status){
 
     int i;
@@ -166,47 +156,6 @@ void print_current_status_pic(Light_Status current_status){
             ST7735_DrawBitmap(light_status_items[i].x, light_status_items[i].y, light_status_items[i].image, light_status_items[i].width, light_status_items[i].height);
         }
     }
-
-    /*// Must be less than or equal to 128 pixels wide by 160 pixels high
-    uint16_t picture_width = 64, picture_hight = 80;
-    //was 32 and v = 100
-    uint16_t horizontal_start = 10, vertical_start = 100;
-
-    //Clear status text
-
-    switch(current_status){
-    case DARK:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, dark, picture_width, picture_hight);
-        TenMsDelay(10);
-        //ST7735_SetCursor(30,0);
-        //ST7735_OutString("Status: Dark");*/
-        /*ST7735_DrawString(0,0,"Status: Dark        ", menu_text_color);
-        break;
-
-    case OVERCAST:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, overcast, picture_width, picture_hight);
-        TenMsDelay(10);
-        ST7735_DrawString(0,0,"Status: Overcast    ", menu_text_color);
-        break;
-
-    case PARTLY_SUNNY:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, partlySunny, picture_width, picture_hight);
-        TenMsDelay(10);
-        ST7735_DrawString(0,0,"Status: Partly-Sunny", menu_text_color);
-        break;
-
-    case SUNNY:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, sunny, picture_width, picture_hight);
-        TenMsDelay(10);
-        ST7735_DrawString(0,0,"Status: Sunny       ", menu_text_color);
-        break;
-
-    case TWILIGHT:
-        ST7735_DrawBitmap(horizontal_start, vertical_start, twilight, picture_width, picture_hight);
-        TenMsDelay(10);
-        ST7735_DrawString(0,0,"Status: Twilight    ", menu_text_color);
-        break;
-    }*/
 }
 
 void updateForecast(int forecast_code){
