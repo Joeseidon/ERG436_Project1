@@ -72,7 +72,7 @@ void RTC_Config(void){
     MAP_RTC_C_enableInterrupt(
             RTC_C_CLOCK_READ_READY_INTERRUPT | RTC_C_TIME_EVENT_INTERRUPT);
 
-    //initalize baseline measurement
+    //Initialize baseline measurement
     TI_CAPT_Init_Baseline(&my_keys);
 
     //update baseline measurement (average 30 measurements)
