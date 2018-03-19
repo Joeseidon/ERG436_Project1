@@ -87,18 +87,15 @@ void RTC_Initial_Set(void){
     ST7735_DrawString2(30,35,"Clock Init:",ST7735_YELLOW,ST7735_BLACK);
     char str_val[2];
     while(!SET_TIME){
-        //SysTick_delay(20);
         //Inquire if a button has been pressed
         const struct Element *tmp = TI_CAPT_Buttons(&my_keys);
 
         if(print_count == 0){
-            //printf("\n\r%s\n",setup_steps[current_Stage].prompt);
 
             ST7735_DrawString2(30,65,setup_steps[current_Stage].prompt,ST7735_YELLOW,ST7735_BLACK);
 
             print_count++;
         }
-        //printf("\b\b  \b\b%02.0d",value);
 
         sprintf(str_val,"%02.0d",value);
         ST7735_DrawString2(50,80,str_val,ST7735_YELLOW,ST7735_BLACK);
@@ -139,17 +136,15 @@ void RTC_Initial_Set(void){
                     break;
 
             }
-            //SysTick_delay(1);
 
             value = 0;
-            //SysTick_delay(100);
+
 
             //Wait for Button release
             while(TI_CAPT_Buttons(&my_keys) == &select_element){
                     ;
             }
         }else if(&down_element == tmp){
-            //SysTick_delay(1);
 
             if(value==0){
                 //if positive, decrement is allowed
@@ -164,7 +159,6 @@ void RTC_Initial_Set(void){
             }
 
         }else if(&up_element == tmp){
-            //SysTick_delay(1);
             value = (value + 1) % setup_steps[current_Stage].increment_mod;
 
             //Wait for Button Release
@@ -172,32 +166,9 @@ void RTC_Initial_Set(void){
                 ;
             }
         }else{
-            //SysTick_delay(10);
             ;
         }
     }
-
-//   if(SET_TIME){
-//        SET_TIME=false;
-//        /* Initializing RTC with current time as described in time in
-//         * definitions section */
-//        MAP_RTC_C_initCalendar(&currentTime, RTC_C_FORMAT_BINARY);
-//
-//        /* Start RTC Clock */
-//        MAP_RTC_C_startClock();
-//
-//        printf("\nTime Set\n\r");
-//        char data[20];
-//        newtime = MAP_RTC_C_getCalendarTime();
-//        sprintf(data,"%02.0d:%02.0d:%02.0d    %02.0d/%02.0d/%02.0d",
-//                    newtime.hours,
-//                    newtime.minutes,
-//                    newtime.seconds,
-//                    newtime.month,
-//                    newtime.dayOfmonth,
-//                    newtime.year);
-//        printf("Current Time: %s\n\r",data);
-//    }
 
     MAP_RTC_C_initCalendar(&currentTime, RTC_C_FORMAT_BINARY);
 

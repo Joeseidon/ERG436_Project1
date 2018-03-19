@@ -8,7 +8,6 @@
  * As such a 100kHz baud clock is established.
  */
 void I2C_Init(void);
-
 /*
  * This method is used to right data to a register on the specified device.
  */

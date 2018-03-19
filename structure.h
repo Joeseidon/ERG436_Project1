@@ -48,12 +48,6 @@
 #include <stdint.h>
 
 /* Public Globals */
-extern const struct Element volume_down;       // Structure containing configuration info for wheel element 1
-extern const struct Element volume_up;         // Structure containing configuration info for wheel element 2
-extern const struct Element right;             // Structure containing configuration info for wheel element 3
-extern const struct Element left;              // Structure containing configuration info for wheel element 4
-extern const struct Element middle_element;    // Structure containing configuration info for element of middle button
-extern const struct Element proximity_element; // Structure containing configuration info for element used in proximity sensor
 
 extern const struct Element up_element;
 extern const struct Element down_element;
@@ -61,9 +55,6 @@ extern const struct Element select_element;
 
 extern const struct Sensor my_keys;
 
-extern const struct Sensor wheel;                // Structure of info for wheel sensor on BoosterPack
-extern const struct Sensor middle_button;        // Structure of info for button in the center of the BoosterPack
-extern const struct Sensor proximity_sensor;     // Structure of info for proximity sensor on BoosterPack
 
 //****** RAM ALLOCATION ********************************************************
 // TOTAL_NUMBER_OF_ELEMENTS defines the total number of elements used, even if
